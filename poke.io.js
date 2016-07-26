@@ -35,6 +35,7 @@ var RequestEnvelop = pokemonProto.RequestEnvelop;
 var ResponseEnvelop = pokemonProto.ResponseEnvelop;
 var Signature = pokemonProto.Signature;
 var pokemonlist = JSON.parse(fs.readFileSync(__dirname + '/pokemons.json', 'utf8'));
+var itemMap = JSON.parse(fs.readFileSync(__dirname + '/items.json', 'utf8'));
 
 var EventEmitter = events.EventEmitter;
 
@@ -75,6 +76,7 @@ function Pokeio() {
   self.google = new GoogleOAuth();
 
   self.pokemonlist = pokemonlist.pokemon;
+  self.itemMap = itemMap;
 
   self.playerInfo = {
     accessToken: '',
