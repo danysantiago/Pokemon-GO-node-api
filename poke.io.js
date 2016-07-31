@@ -89,6 +89,10 @@ function Pokeio() {
     apiEndpoint: ''
   };
 
+  self.settings = {
+
+  }
+
   self.DebugPrint = function (str) {
     if (self.playerInfo.debug === true) {
       //self.events.emit('debug',str)
@@ -230,7 +234,15 @@ function Pokeio() {
           if (err) {
             return callback(err);
           }
-          callback(null);
+
+          // Getting map settings
+          self.GetSettings(function (err, settings) {
+            if (err) {
+              return callback(err);
+            }
+
+            callback(null);
+          });
         });
       });
     });
@@ -271,9 +283,23 @@ function Pokeio() {
       var api_endpoint = 'https://' + f_ret.api_url + '/rpc';
       self.playerInfo.apiEndpoint = api_endpoint;
       self.DebugPrint('[i] Received API Endpoint: ' + api_endpoint);
+
       return callback(null, api_endpoint);
     });
   };
+
+  self.GetSettings = function (callback) {
+    var req = new RequestEnvelop.Requests(5)
+
+    api_req(api_url, self.playerInfo.accessToken, req, function (err, f_ret) {
+      if (err) {
+        return callback(err);
+      }
+      var settings = settings = ResponseEnvelop.DownloadSettingsResponse.decode(f_ret.payload[0]).settings;
+      self.settings = settings;
+      return callback(null, settings);
+    });
+  }
 
   self.GetInventory = function (callback) {
     var req = new RequestEnvelop.Requests(4);
